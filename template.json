@@ -42,7 +42,7 @@
   "resources": [
     {
       "comments": "Call the common template to prepare the AD join command and OMS Custom Data string",
-      "name": "prepCommonSolr",
+      "name": "dev",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('settings').apiVersions.deploy]",
       "properties": {
