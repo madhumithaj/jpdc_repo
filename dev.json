@@ -72,7 +72,7 @@
       ],
 
       "tags": {
-        "project": "ahm",
+        "project": "jpdc",
         "tier": "dev"
       },
       "scale": null,
@@ -86,14 +86,7 @@
             "computerNamePrefix": "[variables('vmName')]",
             "adminUsername": "[parameters('settings').adminUsername]",
             "linuxConfiguration": {
-              "disablePasswordAuthentication": true,
-              "ssh": {
-                "publicKeys": [
-                  {
-                   
-                  }
-                ]
-              }
+              "disablePasswordAuthentication": truesd
             },
             "secrets": []
           },
