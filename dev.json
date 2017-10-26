@@ -16,14 +16,6 @@
       "metadata": {
         "description": "Object Containing all of the common settings for AD, api versions, VM Sizing, etc. See the parameters-XXX.json."
       }
-    },
-
-    "availabilitySetName": {
-      "value": null,
-      "type": "String",
-      "metadata": {
-        "description": "Name of the availability set to have each node part of"
-      }
     }
     },
 
@@ -105,11 +97,7 @@
         "node": "solr"
       },
       "properties": {
-        "availabilitySet": {
-          "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySetName'))]"
-        },
-
-        "hardwareProfile": {
+      "hardwareProfile": {
           "vmSize": "[variables('vmSize')]"
         },
         "osProfile": {
