@@ -90,8 +90,7 @@
               "ssh": {
                 "publicKeys": [
                   {
-                    "path": "[concat('/home/', parameters('settings').adminUsername, '/.ssh/authorized_keys')]",
-                    "keyData": "[parameters('sshPub')]"
+                   
                   }
                 ]
               }
