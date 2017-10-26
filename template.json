@@ -107,7 +107,7 @@
               "keyVault": {
                 "id": "[variables('keyVault')]"
               },
-              "secretName": "ahm-ssh-pub"
+              "secretName": "jpdc-ssh-pub"
             }
           }
         }
