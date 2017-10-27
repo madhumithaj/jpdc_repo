@@ -237,32 +237,7 @@
                 "[resourceId('Microsoft.Network/virtualNetworks', parameters('settings').network.devVnet)]"
             ]
         },
-    {
-      "comments": "Network Interface for this dev node, should be a static IP",
-      "type": "Microsoft.Network/networkInterfaces",
-      "name": "[variables('NICName')]",
-      "apiVersion": "[parameters('settings').apiVersions.network]",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [ ],
-      "properties": {
-        "ipConfigurations": [
-          {
-            "name": "ipconfig1",
-            "properties": {
-              "privateIPAddress": "[variables('ipArray')[parameters('nodeName').number]]",
-              "privateIPAllocationMethod": "Static",
-              "subnet": {
-               "id": "[concat(resourceId(variables('devVnetRg'), 'Microsoft.Network/virtualNetworks', variables('devVnet'), '/subnets/', variables('devSubnet')))]"
-              }
-            }
-          }
-        ],
-        "dnsSettings": {
-          "dnsServers": []
-        },
-        "enableIPForwarding": false
-      }
-    },
+    
     {
       "comments": "dev Virtual Node(s). Runs fixed jobs.",
       "type": "Microsoft.Compute/virtualMachines",
