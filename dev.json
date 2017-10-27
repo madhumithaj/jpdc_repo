@@ -288,7 +288,7 @@
           "computerName": "[variables('vmName')]",
           "adminUsername": "[parameters('settings').adminUsername]",
           "linuxConfiguration": {
-            "disablePasswordAuthentication": true
+            "disablePasswordAuthentication": false
           }
         },
         "storageProfile": {
