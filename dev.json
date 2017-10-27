@@ -302,25 +302,6 @@
           ]
         }
       }
-    },
-	
-    {
-      "comments": "Run the Active Directory join script on bootup",
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[variables('vmName')]",
-      "apiVersion": "[parameters('settings').apiVersions.extension]",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
-      ],
-      "properties": {
-        "publisher": "Microsoft.Azure.Extensions",
-        "type": "CustomScript",
-        "typeHandlerVersion": "2.0",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-        }
-      }
     }
   ]
 }
