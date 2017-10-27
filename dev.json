@@ -247,7 +247,8 @@
       "apiVersion": "[parameters('settings').apiVersions.compute]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[resourceId('Microsoft.Compute/images', variables('image'))]"
+        "[resourceId('Microsoft.Compute/images', variables('image'))]",
+	      "[resourceId('Microsoft.Network/networkInterfaces', variables('NICName'))]"
         
       ],
       "tags": {
