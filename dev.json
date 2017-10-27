@@ -194,8 +194,8 @@
             "dependsOn": []
         },
 	
-	 {
-            "comments": "Generalized from resource: virtualNetworks/jpdc-dev-vnet",
+      {
+            "comments": "Generalized from resource: virtualNetworks/jpdc-dev-vnet'.",
             "type": "Microsoft.Network/virtualNetworks",
             "name": "[parameters('settings').network.devVnet]",
             "apiVersion": "2017-06-01",
@@ -203,27 +203,38 @@
             "scale": null,
             "properties": {
                 "provisioningState": "Succeeded",
+                "resourceGuid": "7490f1bc-585e-4462-bce3-f27d73855b66",
                 "addressSpace": {
                     "addressPrefixes": [
-                        "10.44.6.0/16"
+                        "10.44.0.0/16"
                     ]
                 },
                 "subnets": [
                     {
-                        "name": "[parameters('settings').network.devSubnet]",                   
+                        "name": "jpdc-dev-subnet",
+                        "etag": "W/\"54d876d2-4962-454f-8d1d-f71caf8ff8e9\"",
                         "properties": {
                             "provisioningState": "Succeeded",
-                            "addressPrefix": "10.44.6.0/24",
-                            "networkSecurityGroup": {
-                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('settings').network.devVMmNsg)]"
-                            }
+                            "addressPrefix": "10.44.6.0/24"
                         }
                     }
                 ],
                 "virtualNetworkPeerings": []
             },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: virtualNetworks/jpdc-dev-vnet/subnets/jpdc-dev-subnet'.",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "name": "[concat(parameters('settings').network.devVnet, '/', parameters('settings').network.devSubnet)]",
+            "apiVersion": "2017-06-01",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "addressPrefix": "10.44.6.0/24"
+            },
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('settings').network.devVMmNsg)]"
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('settings').network.devVnet)]"
             ]
         },
     {
