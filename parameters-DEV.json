@@ -20,6 +20,7 @@
         "prepCommon": "/dev/prepCommon.json",
 
         "adminUsername": "jpdc-admin",
+	      "adminPassword": "jpdc-admin",
 
         "imageVHDUri": "https://jpdcprivgrsstadevwestus.blob.core.windows.net/images/baseline-osDisk-299898935.vhd",
                 
