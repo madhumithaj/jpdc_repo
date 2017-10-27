@@ -223,21 +223,33 @@
             },
             "dependsOn": []
         },
-        {
-            "comments": "Generalized from resource: virtualNetworks/jpdc-dev-vnet/subnets/jpdc-dev-subnet'.",
-            "type": "Microsoft.Network/virtualNetworks/subnets",
-            "name": "[concat(parameters('settings').network.devVnet, '/', parameters('settings').network.devSubnet)]",
-            "apiVersion": "2017-06-01",
-            "scale": null,
+        
+		{
+		"comments": "Network Interface for this dev node, should be a static IP",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[variables('NICName')]",
+      "apiVersion": "[parameters('settings').apiVersions.network]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [ ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
             "properties": {
-                "provisioningState": "Succeeded",
-                "addressPrefix": "10.44.6.0/24"
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('settings').network.devVnet)]"
-				
-            ]
+              "privateIPAddress": "[variables('ipArray')[parameters('nodeName').number]]",
+              "privateIPAllocationMethod": "Static",
+              "subnet": {
+                "id": "[concat(resourceId(variables('devVnetRg'), 'Microsoft.Network/virtualNetworks', variables('devVnet'), '/subnets/', variables('devSubnet')))]"
+              }
+            }
+          }
+        ],
+        "dnsSettings": {
+          "dnsServers": []
         },
+        "enableIPForwarding": false
+      }
+    },
 		
     
     {
@@ -248,7 +260,7 @@
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[resourceId('Microsoft.Compute/images', variables('image'))]",
-	      "[resourceId('Microsoft.Network/networkInterfaces', variables('NICName'))]"
+		"[resourceId('Microsoft.Network/networkInterfaces', variables('NICName'))]"
         
       ],
       "tags": {
@@ -263,7 +275,7 @@
         "osProfile": {
           "computerName": "[variables('vmName')]",
           "adminUsername": "[parameters('settings').adminUsername]",
-		"adminPassword": "[parameters('settings').adminPassword]",
+		  "adminPassword": "[parameters('settings').adminPassword]",
           "linuxConfiguration": {
             "disablePasswordAuthentication": false
           }
@@ -291,32 +303,7 @@
         }
       }
     },
-	  {
-		"comments": "Network Interface for this dev node, should be a static IP",
-      "type": "Microsoft.Network/networkInterfaces",
-      "name": "[variables('NICName')]",
-      "apiVersion": "[parameters('settings').apiVersions.network]",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [ ],
-      "properties": {
-        "ipConfigurations": [
-          {
-            "name": "ipconfig1",
-            "properties": {
-              "privateIPAddress": "[variables('ipArray')[parameters('nodeName').number]]",
-              "privateIPAllocationMethod": "Static",
-              "subnet": {
-                "id": "[concat(resourceId(variables('devVnetRg'), 'Microsoft.Network/virtualNetworks', variables('devVnet'), '/subnets/', variables('devSubnet')))]"
-              }
-            }
-          }
-        ],
-        "dnsSettings": {
-          "dnsServers": []
-        },
-        "enableIPForwarding": false
-      }
-    },
+	
     {
       "comments": "Run the Active Directory join script on bootup",
       "type": "Microsoft.Compute/virtualMachines/extensions",
