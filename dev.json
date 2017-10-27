@@ -307,7 +307,7 @@
     {
       "comments": "Run the Active Directory join script on bootup",
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('vmName'), '/ADJoinScript')]",
+      "name": "[variables('vmName')]",
       "apiVersion": "[parameters('settings').apiVersions.extension]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
