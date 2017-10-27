@@ -28,7 +28,7 @@
     "vmSize": "[parameters('settings').vmSizes.devvmsize]",
     "count": "[parameters('settings').nodeCount.devvm]",
 
-    "NICName": "[concat(parameters('nodeName'), '-nic')]",
+    
     "ipArray": "[parameters('settings').network.devNodeIps]",
 
     "devVnetRg": "[parameters('settings').network.devVnetRg]",
@@ -245,12 +245,12 @@
       "apiVersion": "[parameters('settings').apiVersions.compute]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[resourceId('Microsoft.Compute/images', variables('image'))]",
-        "[resourceId('Microsoft.Network/networkInterfaces', variables('NICName'))]"
+        "[resourceId('Microsoft.Compute/images', variables('image'))]"
+        
       ],
       "tags": {
         "displayName": "VirtualMachine",
-        "node": "solr"
+        "node": "dev"
       },
       "properties": {
 
@@ -281,7 +281,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('NICName'))]"
+              
             }
           ]
         }
