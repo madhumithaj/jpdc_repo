@@ -287,6 +287,7 @@
         "osProfile": {
           "computerName": "[variables('vmName')]",
           "adminUsername": "[parameters('settings').adminUsername]",
+		"adminPassword": "[parameters('settings').adminPassword]",
           "linuxConfiguration": {
             "disablePasswordAuthentication": false
           }
