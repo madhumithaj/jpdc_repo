@@ -34,8 +34,8 @@
     "devVnetRg": "[parameters('settings').network.devVnetRg]",
     "devVnet": "[parameters('settings').network.devVnet]",
     "devSubnet": "[parameters('settings').network.devSubnet]",
-	"devVMmNsg":"[parameters('settings').network.devVMmNsg]",
-	"securityRulesrdpname": "default-allow-rdp"
+	"devVMmNsg":"[parameters('settings').network.devVMmNsg]"
+	
   },
 
   "resources": [
@@ -193,29 +193,7 @@
             },
             "dependsOn": []
         },
-	{
-            "comments": "Generalized from resource: jpdc-dev-vm-nsg",
-            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
-            "name": "[parameters('settings').network.securityRulesrdpname]",
-            "apiVersion": "2017-06-01",
-            "scale": null,
-            "properties": {
-                "provisioningState": "Succeeded",
-                "protocol": "TCP",
-                "sourcePortRange": "*",
-                "destinationPortRange": "3389",
-                "sourceAddressPrefix": "*",
-                "destinationAddressPrefix": "*",
-                "access": "Allow",
-                "priority": 1000,
-                "direction": "Inbound",
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": []
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('settings').network.devVMmNsg))]"
-            ]
-        },
+	
 	 {
             "comments": "Generalized from resource: virtualNetworks/jpdc-dev-vnet",
             "type": "Microsoft.Network/virtualNetworks",
