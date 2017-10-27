@@ -28,7 +28,7 @@
     "vmSize": "[parameters('settings').vmSizes.devvmsize]",
     "count": "[parameters('settings').nodeCount.devvm]",
 
-    
+    "NICName": "[concat(parameters('nodeName').name, '-nic1')]",
     "ipArray": "[parameters('settings').network.devNodeIps]",
 
     "devVnetRg": "[parameters('settings').network.devVnetRg]",
