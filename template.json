@@ -45,7 +45,7 @@
   },
   "resources": [
     {
-      "name": "dev",
+      "name": "[concat('devNode-')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('settings').apiVersions.deploy]",
       "dependsOn": [
@@ -161,7 +161,7 @@
       "dependsOn": [
         "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]",
         "[concat('Microsoft.Resources/deployments/', 'JPDC-Dev-Policy')]",
-        "[concat('Microsoft.Resources/deployments/', 'dev')]"
+        "[concat('Microsoft.Resources/deployments/', 'devNode-')]"
       ],
       "copy": {
         "name": "devbackupcopy",
