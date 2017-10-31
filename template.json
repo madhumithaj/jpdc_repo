@@ -45,33 +45,28 @@
   },
   "resources": [
   {
-      "comments": "Call the common template to prepare the AD join command and OMS Custom Data string",
-      "name": "dev",
+      "name": "devNodes",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('settings').apiVersions.deploy]",
+      "dependsOn": [
+       
+      ],
       "properties": {
         "mode": "Incremental",
-           "parameters": {
-          "settings": {
-            "value": "[parameters('settings')]"
+        "templateLink": {
+          "uri": "[variables('devUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+
+        "parameters": {
+          "nodeName":
+          {
+            "value": "jpdc-dev"
           },
 
-          "adAdminUsername": {
-            "reference": {
-              "keyVault": {
-                "id": "[variables('keyVault')]"
-              },
-              "secretName": "adAdminUsername"
-            }
-          },
-          "adAdminPassword": {
-            "reference": {
-              "keyVault": {
-                "id": "[variables('keyVault')]"
-              },
-              "secretName": "adAdminPassword"
-            }
-          }        
+          "settings": {
+            "value": "[parameters('settings')]"
+          }
         }
       }
     },
@@ -90,7 +85,7 @@
       }
     },
     {
-      "name": "[concat('devNode-')]",
+      "name": "[concat('dev-')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('settings').apiVersions.deploy]",
       "dependsOn": [
@@ -193,7 +188,7 @@
       "dependsOn": [
         "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]",
         "[concat('Microsoft.Resources/deployments/', 'JPDC-Dev-Policy')]",
-        "[concat('Microsoft.Resources/deployments/', 'dev')]"
+        "[concat('Microsoft.Resources/deployments/', 'dev-')]"
       ],
       "copy": {
         "name": "devbackupcopy",
