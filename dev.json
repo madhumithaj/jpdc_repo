@@ -323,7 +323,7 @@
     },
 	{
       "comments": "Create all of the data disks, thes need to be attached manualy for now using th mountAll script",
-      "name": "[concat('DevNode', parameters('nodeName').number, parameters('settings').locationAbbrv, '-Disk-', copyIndex(1))]",
+      "name": "[concat('devNode', parameters('nodeName').number, parameters('settings').locationAbbrv, '-Disk-', copyIndex(1))]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('settings').apiVersions.deploy]",
 
