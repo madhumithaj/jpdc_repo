@@ -48,46 +48,6 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('settings').apiVersions.deploy]",
       "dependsOn": [
-       
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('devUrl')]",
-          "contentVersion": "1.0.0.0"
-        },
-
-        "parameters": {
-          "nodeName":
-          {
-            "value": "jpdc-dev"
-          },
-
-          "settings": {
-            "value": "[parameters('settings')]"
-          }
-        }
-      }
-    },
-	{
-      "comments": "Availabity set that contains the nodes, do not want both down at the same time.",
-      "type": "Microsoft.Compute/availabilitySets",
-      "sku": {
-        "name": "Aligned"
-      },
-      "name": "[variables('availabilitySetName')]",
-      "apiVersion": "[parameters('settings').apiVersions.compute]",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "platformUpdateDomainCount": 5,
-        "platformFaultDomainCount": 2
-      }
-    },
-	{
-      "name": "dev",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('settings').apiVersions.deploy]",
-      "dependsOn": [
         "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]"
       ],
       "copy": {
@@ -123,6 +83,21 @@
         }
       }
     },
+	{
+      "comments": "Availabity set that contains the nodes, do not want both down at the same time.",
+      "type": "Microsoft.Compute/availabilitySets",
+      "sku": {
+        "name": "Aligned"
+      },
+      "name": "[variables('availabilitySetName')]",
+      "apiVersion": "[parameters('settings').apiVersions.compute]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "platformUpdateDomainCount": 5,
+        "platformFaultDomainCount": 2
+      }
+    },
+	
     {
       "name": "JPDC-Dev-Policy",
       "type": "Microsoft.Resources/deployments",
