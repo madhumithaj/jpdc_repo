@@ -44,6 +44,20 @@
 	"devNodePre": "[concat('jpdc-', toLower(parameters('settings').stage), parameters('settings').locationAbbrv)]"
   },
   "resources": [
+  {
+      "comments": "Availabity set that contains the nodes, do not want both down at the same time.",
+      "type": "Microsoft.Compute/availabilitySets",
+      "sku": {
+        "name": "Aligned"
+      },
+      "name": "[variables('availabilitySetName')]",
+      "apiVersion": "[parameters('settings').apiVersions.compute]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "platformUpdateDomainCount": 5,
+        "platformFaultDomainCount": 2
+      }
+    },
     {
       "name": "[concat('devNode-')]",
       "type": "Microsoft.Resources/deployments",
@@ -84,20 +98,7 @@
         }
       }
     },
-	{
-      "comments": "Availabity set that contains the nodes, do not want both down at the same time.",
-      "type": "Microsoft.Compute/availabilitySets",
-      "sku": {
-        "name": "Aligned"
-      },
-      "name": "[variables('availabilitySetName')]",
-      "apiVersion": "[parameters('settings').apiVersions.compute]",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "platformUpdateDomainCount": 5,
-        "platformFaultDomainCount": 2
-      }
-    },
+	
 	
     {
       "name": "JPDC-Dev-Policy",
