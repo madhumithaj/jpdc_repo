@@ -84,7 +84,7 @@
       }
     },
 	{
-      "name": "devnode",
+      "name": "dev",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('settings').apiVersions.deploy]",
       "dependsOn": [
