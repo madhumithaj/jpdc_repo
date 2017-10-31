@@ -38,7 +38,7 @@
     "image": "[concat(parameters('nodeName'), '-img')]",
     "osdisk": "[concat(parameters('nodeName'), '-osdisk')]",
     "diskPre": "[concat(parameters('nodeName').name, '-dsk-')]",
-    "vmName": "[parameters('nodeName')]",
+    "vmName": "[parameters('nodeName'),'-vm']",
     "vmSize": "[parameters('settings').vmSizes.devvmsize]",
     "count": "[parameters('settings').nodeCount.devvm]",
 
