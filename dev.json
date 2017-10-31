@@ -2,6 +2,13 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+  "devDisksUrl": {
+      "value": null,
+      "type": "string",
+      "metadata": {
+        "description": "URL for the Oracle Disk Create template, used to create all data disks, reused here the disks as well"
+      }
+    },
     "nodeName": {
       "value": null,
       "type": "String",
@@ -16,6 +23,13 @@
       "metadata": {
         "description": "Object Containing all of the common settings for AD, api versions, VM Sizing, etc. See the parameters-XXX.json."
       }
+    },
+	"availabilitySetName": {
+      "value": null,
+      "type": "String",
+      "metadata": {
+        "description": "Name of the availability set to have each node part of"
+      }
     }
     },
 
@@ -23,7 +37,7 @@
     "imageVHDUri": "[parameters('settings').imageVHDUri]",
     "image": "[concat(parameters('nodeName'), '-img')]",
     "osdisk": "[concat(parameters('nodeName'), '-osdisk')]",
-
+    "diskPre": "[concat(parameters('nodeName').name, '-dsk-')]",
     "vmName": "[parameters('nodeName')]",
     "vmSize": "[parameters('settings').vmSizes.devvmsize]",
     "count": "[parameters('settings').nodeCount.devvm]",
@@ -34,7 +48,9 @@
     "devVnetRg": "[parameters('settings').network.devVnetRg]",
     "devVnet": "[parameters('settings').network.devVnet]",
     "devSubnet": "[parameters('settings').network.devSubnet]",
-	"devVMmNsg":"[parameters('settings').network.devVMmNsg]"
+	"devVMmNsg":"[parameters('settings').network.devVMmNsg]",
+	"diskCreate": "[parameters('settings').vmDisks]",
+	"devNodePre": "[concat('jpdc-', toLower(parameters('settings').stage), parameters('settings').locationAbbrv)]"
 	
   },
 
@@ -236,7 +252,7 @@
           {
             "name": "ipconfig1",
             "properties": {
-              "privateIPAddress": "10.44.6.25",
+              "privateIPAddress": "10.44.6.26",
               "privateIPAllocationMethod": "Static",
               "subnet": {
                 "id": "[concat(resourceId(variables('devVnetRg'), 'Microsoft.Network/virtualNetworks', variables('devVnet')), '/subnets/', variables('devSubnet'))]"
@@ -268,7 +284,9 @@
         "node": "devnode"
       },
       "properties": {
-
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySetName'))]"
+        },
         "hardwareProfile": {
           "vmSize": "[variables('vmSize')]"
         },
@@ -300,6 +318,40 @@
               "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('NICName'))]"
             }
           ]
+        }
+      }
+    },
+	{
+      "comments": "Create all of the data disks, thes need to be attached manualy for now using th mountAll script",
+      "name": "[concat('DevNode', parameters('nodeName').number, parameters('settings').locationAbbrv, '-Disk-', copyIndex(1))]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('settings').apiVersions.deploy]",
+
+      "copy": {
+        "name": "devdiskscopy",
+        "count": "[length(variables('diskCreate'))]"
+      },
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('devDisksUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+
+        "parameters": {
+          "nodeName": {
+            "value": {
+              "name": "[concat(variables('diskPre'), variables('diskCreate')[copyIndex()].Nm)]",
+              "number": "[copyIndex(1)]"
+            }
+          },
+          "diskSize": {
+            "value": "[variables('diskCreate')[copyIndex()].Sz]"
+          },
+
+          "settings": {
+            "value": "[parameters('settings')]"
+          }
         }
       }
     }
