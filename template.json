@@ -193,7 +193,7 @@
       "dependsOn": [
         "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]",
         "[concat('Microsoft.Resources/deployments/', 'JPDC-Dev-Policy')]",
-        "[concat('Microsoft.Resources/deployments/', 'devNode-')]"
+        "[concat('Microsoft.Resources/deployments/', 'dev')]"
       ],
       "copy": {
         "name": "devbackupcopy",
