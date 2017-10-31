@@ -150,7 +150,7 @@
       }
     },
     {
-      "name": "JPDC-Dev-Backup",
+      "name": "[concat('JPDC-Dev-Backup-', copyIndex(1))]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('settings').apiVersions.deploy]",
       "dependsOn": [
@@ -173,7 +173,7 @@
       "value": "[variables('resourcegrp')]"
     },
     "existingVirtualMachines": {
-      "value": []
+      "value": ["[concat(variables('devNodePre'))]"]
     },
     "existingRecoveryServicesVault": {
       "value": "devbackup"
