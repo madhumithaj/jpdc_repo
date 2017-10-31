@@ -155,7 +155,8 @@
       "apiVersion": "[parameters('settings').apiVersions.deploy]",
       "dependsOn": [
         "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]",
-        "[concat('Microsoft.Resources/deployments/', 'JPDC-Dev-Policy')]"
+        "[concat('Microsoft.Resources/deployments/', 'JPDC-Dev-Policy')]",
+	"[concat('Microsoft.Resources/deployments/', 'devNodes')]"
       ],
       "copy": {
         "name": "devbackupcopy",
