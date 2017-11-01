@@ -179,6 +179,12 @@
         },
 
         "parameters": {
+		"nodeName": {
+            "value": {
+              "name": "jpdc-devnode",
+              "number": "[copyIndex(1)]"
+            }
+          },
     "existingVirtualMachinesResourceGroup": {
       "value": "[variables('resourcegrp')]"
     },
