@@ -18,14 +18,6 @@
         "description": "Resource Group for the above Key vault"
       }
     },
-	"nodeName": {
-      "value": null,
-      "type": "String",
-      "metadata": {
-        "description": "Name of the scale set, i.e. jpdc-dev"
-      }
-    },
-
     "settings": {
       "value": null,
       "type": "object",
