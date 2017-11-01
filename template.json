@@ -49,7 +49,7 @@
 	"policyUrl": "[concat(parameters('templateUrl'), '/policy.json')]",
 	"backupUrl": "[concat(parameters('templateUrl'), '/backup.json')]",
 	"resourcegrp": "[concat('jpdc','-arm', parameters('settings').locationAbbrv, '-rg')]",
-	"vmName": "[parameters('nodeName'),'-vm']",
+	"vmName": "[parameters('nodeName').name,'-vm']",
 	"devNodePre": "[concat('jpdc-', toLower(parameters('settings').stage), parameters('settings').locationAbbrv)]"
   },
   "resources": [
@@ -58,8 +58,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('settings').apiVersions.deploy]",
       "dependsOn": [
-       "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]",
-	   "[concat('Microsoft.Compute/virtualMachines/', parameters('nodeName'))]"
+       "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -75,8 +74,7 @@
           "nodeName":
           {
             "value":{
-              "name": "jpdc-dev",
-              "number": "[copyIndex()]"
+              "name": "jpdc-dev"
             },
 
           "settings": {
