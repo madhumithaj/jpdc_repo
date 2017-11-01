@@ -59,7 +59,7 @@
       "apiVersion": "[parameters('settings').apiVersions.deploy]",
       "dependsOn": [
        "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]",
-	   "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
+	   "[concat('Microsoft.Compute/virtualMachines/', parameters('nodeName'))]"
       ],
       "properties": {
         "mode": "Incremental",
