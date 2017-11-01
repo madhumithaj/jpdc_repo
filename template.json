@@ -26,6 +26,13 @@
         "description": "Object Containing all of the common settings for AD, api versions, VM Sizing, etc. See the parameters-XXX.json."
       }
     },
+	  "nodeName": {
+      "value": null,
+      "type": "String",
+      "metadata": {
+        "description": "Name of the scale set, i.e. jpdc-dev"
+      }
+    },
     "templateUrl": {
       "value": null,
       "type": "string",
