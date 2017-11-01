@@ -252,7 +252,7 @@
           {
             "name": "ipconfig1",
             "properties": {
-              "privateIPAddress": "10.44.6.26",
+              "privateIPAddress": "[parameters('settings').network.devNodeIps]",
               "privateIPAllocationMethod": "Static",
               "subnet": {
                 "id": "[concat(resourceId(variables('devVnetRg'), 'Microsoft.Network/virtualNetworks', variables('devVnet')), '/subnets/', variables('devSubnet'))]"
@@ -261,7 +261,7 @@
           }
         ],
         "dnsSettings": {
-          "dnsServers": []
+          "dnsServers": ["[parameters('settings').DNSServerAddress)]"]
         },
         "enableIPForwarding": false
       }
