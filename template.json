@@ -18,6 +18,13 @@
         "description": "Resource Group for the above Key vault"
       }
     },
+	"nodeName": {
+      "value": null,
+      "type": "String",
+      "metadata": {
+        "description": "Name of the scale set, i.e. jpdc-dev"
+      }
+    },
 
     "settings": {
       "value": null,
@@ -42,6 +49,7 @@
 	"policyUrl": "[concat(parameters('templateUrl'), '/policy.json')]",
 	"backupUrl": "[concat(parameters('templateUrl'), '/backup.json')]",
 	"resourcegrp": "[concat('jpdc','-arm', parameters('settings').locationAbbrv, '-rg')]",
+	"vmName": "[parameters('nodeName'),'-vm']",
 	"devNodePre": "[concat('jpdc-', toLower(parameters('settings').stage), parameters('settings').locationAbbrv)]"
   },
   "resources": [
@@ -156,7 +164,8 @@
       "dependsOn": [
         "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]",
         "[concat('Microsoft.Resources/deployments/', 'JPDC-Dev-Policy')]",
-	"[concat('Microsoft.Resources/deployments/', 'devNodes')]"
+		"[concat('Microsoft.Resources/deployments/', 'devNodes')]",
+		"[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
       ],
       "copy": {
         "name": "devbackupcopy",
