@@ -41,7 +41,6 @@
 	"policyUrl": "[concat(parameters('templateUrl'), '/policy.json')]",
 	"backupUrl": "[concat(parameters('templateUrl'), '/backup.json')]",
 	"resourcegrp": "[concat('jpdc','-arm', parameters('settings').locationAbbrv, '-rg')]",
-	"vmName": "[parameters('nodeName').name,'-vm']",
 	"devNodePre": "[concat('jpdc-', toLower(parameters('settings').stage), parameters('settings').locationAbbrv)]"
   },
   "resources": [
