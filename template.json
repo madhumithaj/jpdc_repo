@@ -58,7 +58,8 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('settings').apiVersions.deploy]",
       "dependsOn": [
-       "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]"
+       "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]",
+	   "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -67,7 +68,6 @@
           "contentVersion": "1.0.0.0"
         },
 
-        "parameters": {
 		"parameters": {
           "devDisksUrl": {
             "value": "[concat(parameters('templateUrl'), '/devDisks.json')]"
@@ -84,7 +84,6 @@
             "value": "[variables('availabilitySetName')]"
           }
         }
-      }
 	 }
     },
   {
@@ -164,8 +163,7 @@
       "dependsOn": [
         "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]",
         "[concat('Microsoft.Resources/deployments/', 'JPDC-Dev-Policy')]",
-		"[concat('Microsoft.Resources/deployments/', 'devNodes')]",
-		"[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
+		"[concat('Microsoft.Resources/deployments/', 'devNodes')]"
       ],
       "copy": {
         "name": "devbackupcopy",
@@ -179,11 +177,7 @@
         },
 
         "parameters": {
-		"nodeName": {
-            "value": {
-              "name": "jpdc-dev"
-            }
-          },
+
     "existingVirtualMachinesResourceGroup": {
       "value": "[variables('resourcegrp')]"
     },
