@@ -26,13 +26,6 @@
         "description": "Object Containing all of the common settings for AD, api versions, VM Sizing, etc. See the parameters-XXX.json."
       }
     },
-	  "nodeName": {
-      "value": null,
-      "type": "String",
-      "metadata": {
-        "description": "Name of the scale set, i.e. jpdc-dev"
-      }
-    },
     "templateUrl": {
       "value": null,
       "type": "string",
@@ -46,7 +39,6 @@
     "availabilitySetName": "[concat('jpdc-avail', parameters('settings').locationAbbrv)]",
     "keyVault": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('keyVaultRg'), '/providers/Microsoft.KeyVault/vaults/', parameters('keyVaultNm'))]",
     "devUrl": "[concat(parameters('templateUrl'), '/dev.json')]",
-	"vmName": "[concat(parameters('nodeName'),'-vm')]",
 	"policyUrl": "[concat(parameters('templateUrl'), '/policy.json')]",
 	"backupUrl": "[concat(parameters('templateUrl'), '/backup.json')]",
 	"resourcegrp": "[concat('jpdc','-arm', parameters('settings').locationAbbrv, '-rg')]",
@@ -58,8 +50,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('settings').apiVersions.deploy]",
       "dependsOn": [
-       "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]",
-	   "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
+       "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]"
       ],
       "properties": {
         "mode": "Incremental",
