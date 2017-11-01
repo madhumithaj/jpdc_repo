@@ -74,8 +74,10 @@
           },
           "nodeName":
           {
-            "value": "jpdc-dev"
-          },
+            "value":{
+              "name": "jpdc-dev",
+              "number": "[copyIndex()]"
+            },
 
           "settings": {
             "value": "[parameters('settings')]"
@@ -84,6 +86,7 @@
             "value": "[variables('availabilitySetName')]"
           }
         }
+	  }
 	 }
     },
   {
