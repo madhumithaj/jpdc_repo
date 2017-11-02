@@ -29,7 +29,7 @@
 
   "variables": {
     "diskPre": "[parameters('nodeName').name]",
-    "diskName": "[concat(variables('diskPre'), '-', parameters('nodeName').number)]",
+    "diskName": "[concat(variables('diskPre'), '-', parameters('nodeName').name)]",
     "dataDiskType": "Premium_LRS",
     "dataDiskSz": "[parameters('diskSize')]"
   },
