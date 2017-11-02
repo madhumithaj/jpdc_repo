@@ -11,7 +11,7 @@
     },
     "nodeName": {
       "value": null,
-      "type": "String",
+      "type": "Object",
       "metadata": {
         "description": "Name of the scale set, i.e. jpdc-dev"
       }
@@ -35,14 +35,14 @@
 
   "variables": {
     "imageVHDUri": "[parameters('settings').imageVHDUri]",
-    "image": "[concat(parameters('nodeName'), '-img')]",
-    "osdisk": "[concat(parameters('nodeName'), '-osdisk')]",
+    "image": "[concat(parameters('nodeName').name, '-img')]",
+    "osdisk": "[concat(parameters('nodeName').name, '-osdisk')]",
     "diskPre": "[concat(parameters('nodeName').name, '-dsk-')]",
-    "vmName": "[concat(parameters('nodeName'),'-vm')]",
+    "vmName": "[concat(parameters('nodeName').name,'-vm')]",
     "vmSize": "[parameters('settings').vmSizes.devvmsize]",
     "count": "[parameters('settings').nodeCount.devvm]",
 
-    "NICName": "[concat(parameters('nodeName'), '-nic1')]",
+    "NICName": "[concat(parameters('nodeName').name, '-nic1')]",
     "ipArray": "[parameters('settings').network.devNodeIps]",
 
     "devVnetRg": "[parameters('settings').network.devVnetRg]",
@@ -218,8 +218,7 @@
             "location": "westus",
             "scale": null,
             "properties": {
-                "provisioningState": "Succeeded",
-                "resourceGuid": "7490f1bc-585e-4462-bce3-f27d73855b66",
+                "provisioningState": "Succeeded",                
                 "addressSpace": {
                     "addressPrefixes": [
                         "10.44.0.0/16"
@@ -227,8 +226,7 @@
                 },
                 "subnets": [
                     {
-                        "name": "jpdc-dev-subnet",
-                        "etag": "W/\"54d876d2-4962-454f-8d1d-f71caf8ff8e9\"",
+                        "name": "jpdc-dev-subnet",                       
                         "properties": {
                             "provisioningState": "Succeeded",
                             "addressPrefix": "10.44.6.0/24"
@@ -261,7 +259,7 @@
           }
         ],
         "dnsSettings": {
-          "dnsServers": ["[parameters('settings').DNSServerAddress)]"]
+          "dnsServers": []
         },
         "enableIPForwarding": false
       }
@@ -323,7 +321,7 @@
     },
 	{
       "comments": "Create all of the data disks, thes need to be attached manualy for now using th mountAll script",
-      "name": "[concat('devNode', parameters('nodeName').number, parameters('settings').locationAbbrv, '-Disk-', copyIndex(1))]",
+      "name": "[concat(variables('devNodePre'), parameters('settings').locationAbbrv, '-Disk-', copyIndex(1))]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('settings').apiVersions.deploy]",
 
