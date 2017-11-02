@@ -63,11 +63,12 @@
           "devDisksUrl": {
             "value": "[concat(parameters('templateUrl'), '/devDisks.json')]"
           },
-          "nodeName":
-          {
-            "value":{
-              "name": "jpdc-dev"
-            },
+          "nodeName": {
+            "value": {
+              "name": "[concat(variables('devNodePre'))]",
+              
+            }
+          },
 
           "settings": {
             "value": "[parameters('settings')]"
