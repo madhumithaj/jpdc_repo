@@ -18,6 +18,18 @@
         "description": "Resource Group for the above Key vault"
       }
     },
+	"adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "User name for the Virtual Machine."
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Password for the Virtual Machine."
+      }
+    },
 
     "settings": {
       "value": null,
@@ -65,10 +77,13 @@
           },
           "nodeName": {
             "value": {
-              "name": "[concat(variables('devNodePre'))]",
+              "name": "[concat(variables('devNodePre'))]"
               
             }
           },
+		  "adminPassword": {
+      "value": "[parameters('settings').adminPassword]"
+    },
 
           "settings": {
             "value": "[parameters('settings')]"
@@ -78,7 +93,7 @@
           }
         }
 	  }
-	 }
+	 
     },
   {
       "comments": "Availabity set that contains the nodes, do not want both down at the same time.",
@@ -151,7 +166,7 @@
       }
     },
     {
-      "name": "[concat('JPDC-Dev-Backup-', copyIndex(1))]",
+      "name": "[concat('JPDC-Dev-Backup-')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('settings').apiVersions.deploy]",
       "dependsOn": [
@@ -159,10 +174,6 @@
         "[concat('Microsoft.Resources/deployments/', 'JPDC-Dev-Policy')]",
 		"[concat('Microsoft.Resources/deployments/', 'devNodes')]"
       ],
-      "copy": {
-        "name": "devbackupcopy",
-        "count": "[parameters('settings').nodeCount.devvm]"
-      },
       "properties": {
         "mode": "Incremental",
         "templateLink": {
