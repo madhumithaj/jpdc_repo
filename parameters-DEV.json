@@ -22,8 +22,7 @@
         "adminUsername": "jpdc-admin",
 		"adminPassword": "Jpdc-admin1234",
 
-        "imageVHDUri": "https://jpdcprivgrsstadevwestus.blob.core.windows.net/images/baseline-osDisk-299898935.vhd",
-          "DNSServerAddress": "jpdc-dev-env",  
+        "imageVHDUri": "https://jpdcprivgrsstadevwestus.blob.core.windows.net/images/baseline-osDisk-299898935.vhd", 
 
         "vmSizes": {
           "appGateway": "Standard_Small",
@@ -34,7 +33,7 @@
 
         "nodeCount": {
           "appGatewayCapacity": 2,
-		  "devvm" : 2
+		  "devvm" : 1
         },
 
         "apiVersions": {
@@ -51,7 +50,7 @@
           "devVnetRg": "jpdc-arm-validation",
           "devVnet": "jpdc-dev-vnet",
           "devSubnet": "jpdc-dev-subnet",
-          "devNodeIps": [ "10.44.6.26"],
+          "devNodeIps":  "10.44.6.26",
           "devGatewayIp": "10.44.6.37",
           "devGatewayVnet": "jpdc-services-vnet",
           "devGatewaySubnet": "jpdc-appgateway-subnet",
