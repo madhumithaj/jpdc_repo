@@ -16,6 +16,12 @@
         "description": "Name of the scale set, i.e. jpdc-dev"
       }
     },
+	  adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "User name for the Virtual Machine."
+      }
+    },
  "adminPassword": {
       "type": "securestring",
       "metadata": {
