@@ -10,12 +10,12 @@
     "keyVaultRg": {
       "value": "jpdc-storage-westus-rg"
     },
-"adminUsername":{
-"value": "jpdc-admin"
-},
-"adminPassword":{
-"value": "Jpdc-admin1234"
-},
+     "adminUsername":{
+     "value": "jpdc-admin"
+    },
+	"adminPassword":{
+	"value": "Jpdc-admin1234"
+	},
 		
     "settings": {
       "value": {
