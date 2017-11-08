@@ -10,13 +10,13 @@
     "keyVaultRg": {
       "value": "jpdc-storage-westus-rg"
     },
-	  "adminUsername":{
+"adminUsername":{
 "value": "jpdc-admin"
 },
 "adminPassword":{
 "value": "Jpdc-admin1234"
 },
-
+		
     "settings": {
       "value": {
         "stage": "DEV",
@@ -25,7 +25,7 @@
 
         "prepCommon": "/dev/prepCommon.json",
 
-       
+        
 
         "imageVHDUri": "https://jpdcprivgrsstadevwestus.blob.core.windows.net/images/baseline-osDisk-299898935.vhd", 
 
@@ -75,7 +75,7 @@
     },
 
     "templateUrl": {
-      "value": "https://raw.githubusercontent.com/madhumithaj/jpdc_repo/master/"
+      "value": "https://raw.githubusercontent.com/madhumithaj/madhu_repo/master/"
     }
   }
 }
