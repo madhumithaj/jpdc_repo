@@ -22,16 +22,11 @@
         "stage": "DEV",
         "location": "westus",
         "locationAbbrv": "",
-
-        "prepCommon": "/dev/prepCommon.json",
-
-        
-
         "imageVHDUri": "https://jpdcprivgrsstadevwestus.blob.core.windows.net/images/baseline-osDisk-299898935.vhd", 
 
         "vmSizes": {
           "appGateway": "Standard_Small",
-		  "devvmsize" : "Standard_DS2_v2"
+          "devvmsize" : "Standard_DS2_v2"
         },
 
         "defaultStorageType":"Premium_LRS",
