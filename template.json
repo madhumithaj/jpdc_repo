@@ -2,7 +2,21 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "devDisksUrl": {
+      "value": null,
+      "type": "string",
+      "metadata": {
+        "description": "URL for the Oracle Disk Create template, used to create all data disks, reused here for the fileshare disks as well"
+      }
+    },
 
+    "nodeName": {
+      "value": null,
+      "type": "object",
+      "metadata": {
+        "description": "Object with the Name of the node, i.e. ahm-fileshare and the number (i.e. 0 or 1, 0 based)"
+      }
+    },
     "keyVaultNm": {
       "value": null,
       "type": "string",
@@ -76,25 +90,27 @@
         },
 
         "parameters": {
+          "devDisksUrl": {
+            "value": "[concat(parameters('templateUrl'), '/devDisks.json')]"
+          },
+          "nodeName": {
+            "value": {
+              "name": "[concat(variables('devNodePre'))]"
+              
+            }
+          },
+		  "adminUsername": {
+      "value": "[parameters('adminUsername')]"
+    },
+		  "adminPassword": {
+      "value": "[parameters('adminPassword')]"
+    },
+
           "settings": {
             "value": "[parameters('settings')]"
           },
-
-          "adAdminUsername": {
-            "reference": {
-              "keyVault": {
-                "id": "[variables('keyVault')]"
-              },
-              "secretName": "adAdminUsername"
-            }
-          },
-          "adAdminPassword": {
-            "reference": {
-              "keyVault": {
-                "id": "[variables('keyVault')]"
-              },
-              "secretName": "adAdminPassword"
-            }
+		  "availabilitySetName": {
+            "value": "[variables('availabilitySetName')]"
           }
         }
       }
