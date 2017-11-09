@@ -26,6 +26,12 @@
         "description": "Object Containing all of the common settings for AD, api versions, VM Sizing, etc. See the parameters-XXX.json."
       }
     },
+	  "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "User name for the Virtual Machine."
+      }
+    },
 	"adminPassword": {
       "type": "securestring",
       "metadata": {
