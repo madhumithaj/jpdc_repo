@@ -2,21 +2,6 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "devDisksUrl": {
-      "value": null,
-      "type": "string",
-      "metadata": {
-        "description": "URL for the Oracle Disk Create template, used to create all data disks, reused here for the fileshare disks as well"
-      }
-    },
-
-    "nodeName": {
-      "value": null,
-      "type": "object",
-      "metadata": {
-        "description": "Object with the Name of the node, i.e. ahm-fileshare and the number (i.e. 0 or 1, 0 based)"
-      }
-    },
     "keyVaultNm": {
       "value": null,
       "type": "string",
@@ -69,6 +54,7 @@
 	"resourcegrp": "[concat('jpdc','-arm', parameters('settings').locationAbbrv, '-rg')]",
 	"devNodePre": "[concat('jpdc-', toLower(parameters('settings').stage), parameters('settings').locationAbbrv)]",
     "lbID": "[resourceId('Microsoft.Network/loadBalancers','DevLB')]",
+	"loadBalancerName": "[concat('jpdc-', parameters('settings').stage, '-lb', parameters('settings').locationAbbrv)]",
     "frontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/LoadBalancerFrontEnd')]",
     "lbPoolID": "[concat(variables('lbID'),'/backendAddressPools/BackendPool1')]",
     "lbProbeID": "[concat(variables('lbID'),'/probes/tcpProbe')]",
@@ -155,7 +141,7 @@
 	
     {
      "apiVersion": "2015-05-01-preview",
-     "name": "[concat('jpdc-', parameters('settings').stage,'-lb', parameters('settings').locationAbbrv)]",
+     "name":  "[variables('loadBalancerName')]",
      "type": "Microsoft.Network/loadBalancers",
      "location": "[resourceGroup().location]",
      "dependsOn": [
