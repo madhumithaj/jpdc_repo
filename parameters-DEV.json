@@ -22,11 +22,6 @@
         "stage": "DEV",
         "location": "westus",
         "locationAbbrv": "",
-
-        "prepCommon": "/dev/prepCommon.json",
-
-        
-
         "imageVHDUri": "https://jpdcprivgrsstadevwestus.blob.core.windows.net/images/baseline-osDisk-299898935.vhd", 
 
         "vmSizes": {
@@ -52,7 +47,7 @@
         "quote": "'",
 
         "network": {
-          "devVnetRg": "jpdc-arm-validation",
+          "devVnetRg": "jpdc-arm-validation1",
           "devVnet": "jpdc-dev-vnet",
           "devSubnet": "jpdc-dev-subnet",
 		  "gatewaysubnet": "jpdc-dev-gatewaysubnet",
