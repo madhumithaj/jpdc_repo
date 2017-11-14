@@ -53,8 +53,8 @@
 	"backupUrl": "[concat(parameters('templateUrl'), '/backup.json')]",
 	"resourcegrp": "[concat('jpdc','-arm', parameters('settings').locationAbbrv, '-rg')]",
 	"devNodePre": "[concat('jpdc-', toLower(parameters('settings').stage), parameters('settings').locationAbbrv)]",
-    "lbID": "[resourceId('Microsoft.Network/loadBalancers','DevLB')]",
 	"loadBalancerName": "[concat('jpdc-', parameters('settings').stage, '-lb', parameters('settings').locationAbbrv)]",
+    "lbID": "[resourceId('Microsoft.Network/loadBalancers','DevLB')]",
     "frontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/LoadBalancerFrontEnd')]",
     "lbPoolID": "[concat(variables('lbID'),'/backendAddressPools/BackendPool1')]",
     "lbProbeID": "[concat(variables('lbID'),'/probes/tcpProbe')]",
@@ -137,29 +137,43 @@
                 "virtualNetworkPeerings": []
             },
             "dependsOn": []
-        },
-	
+    },
     {
-     "apiVersion": "2015-05-01-preview",
-     "name":  "[variables('loadBalancerName')]",
-     "type": "Microsoft.Network/loadBalancers",
-     "location": "[resourceGroup().location]",
-     "dependsOn": [
-       "[concat('Microsoft.Resources/deployments/', 'devNodes')]"
-     ],
-     "properties": {
-       "frontendIPConfigurations": [
-         {
-           "name": "LoadBalancerFrontEnd",
-           "properties": {
-             "privateIPAddress": "[parameters('settings').network.devLoadBal]",
-  	         "privateIPAllocationMethod": "Static",
-             "subnet":{
-               "id": "[concat(resourceId(variables('devVnetRg'), 'Microsoft.Network/virtualNetworks', variables('devVnet')), '/subnets/', variables('devSubnet'))]"
-             }
-           }
-         }
-       ],
+      "comments": "Availabity set that contains the dev nodes, do not want both down at the same time.",
+      "type": "Microsoft.Compute/availabilitySets",
+      "sku": {
+        "name": "Aligned"
+      },
+      "name": "[variables('availabilitySetName')]",
+      "apiVersion": "[parameters('settings').apiVersions.compute]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "platformUpdateDomainCount": 5,
+        "platformFaultDomainCount": 2
+      }
+    },
+	{
+            "comments": "Generalized from resource: loadBalancers",
+            "type": "Microsoft.Network/loadBalancers",
+            "name":  "[variables('loadBalancerName')]",
+            "apiVersion": "2017-06-01",
+            "location": "westus",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "frontendIPConfigurations": [
+                    {
+                        "name": "LoadBalancerFrontEnd",                        
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "privateIPAddress": "10.44.6.5",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[concat(resourceId(variables('devVnetRg'), 'Microsoft.Network/virtualNetworks', variables('devVnet')), '/subnets/', variables('devSubnet'))]"
+                            }
+                        }
+                    }
+                ],
        "backendAddressPools": [
          {
            "name": "BackendPool1"
@@ -225,20 +239,6 @@
        ]
      }
    },
-    {
-      "comments": "Availabity set that contains the dev nodes, do not want both down at the same time.",
-      "type": "Microsoft.Compute/availabilitySets",
-      "sku": {
-        "name": "Aligned"
-      },
-      "name": "[variables('availabilitySetName')]",
-      "apiVersion": "[parameters('settings').apiVersions.compute]",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "platformUpdateDomainCount": 5,
-        "platformFaultDomainCount": 2
-      }
-    },
     {
       "name": "devNodes1",
       "type": "Microsoft.Resources/deployments",
