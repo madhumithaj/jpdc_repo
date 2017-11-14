@@ -46,7 +46,7 @@
         "description": "Name of the availability set to have each node part of"
       }
     },
-    "loadbalancerRuleName": {
+    "loadbalancerName": {
       "value": null,
       "type": "String",
       "metadata": {
