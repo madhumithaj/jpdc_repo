@@ -7,7 +7,7 @@
       "value": null,
       "type": "string",
       "metadata": {
-        "description": "URL for the Oracle Disk Create template, used to create all data disks, reused here for the fileshare disks as well"
+        "description": "URL for the Oracle Disk Create template, used to create all data disks, reused here for the dev disks as well"
       }
     },
 
@@ -15,7 +15,7 @@
       "value": null,
       "type": "object",
       "metadata": {
-        "description": "Object with the Name of the node, i.e. ahm-fileshare and the number (i.e. 0 or 1, 0 based)"
+        "description": "Object with the Name of the node and the number (i.e. 0 or 1, 0 based)"
       }
     },
 
@@ -55,7 +55,7 @@
     "diskPre": "[concat(parameters('nodeName').name, '-dsk-')]",
 
     "vmName": "[parameters('nodeName').name]",
-    "vmSize": "[parameters('settings').vmSizes.fileshare]",
+    "vmSize": "[parameters('settings').vmSizes.devvmsize]",
 
     "NICName": "[concat(parameters('nodeName').name, '-nic1')]",
     "devVnetRg": "[parameters('settings').network.devVnetRg]",
@@ -64,7 +64,7 @@
     "ipArray": "[parameters('settings').network.devNodeIps]",
     "loadBalancerName": "[concat('jpdc-', parameters('settings').stage, '-lb', parameters('settings').locationAbbrv)]",
     "lbID": "[resourceId('Microsoft.Network/loadBalancers',variables('loadBalancerName'))]",
-    "backendpoolname": "[concat('jpdc-fileshare-pool', parameters('settings').locationAbbrv)]",
+    "backendpoolname": "[concat('jpdc-dev-pool', parameters('settings').locationAbbrv)]",
     "diskCreate": "[parameters('settings').vmDisks]"
   },
 
