@@ -226,7 +226,42 @@
             },
             "dependsOn": []
         },
-		
+		{
+            "comments": "Generalized from resource: virtualNetworks",
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[variables('devVnet')]",
+            "apiVersion": "2017-06-01",
+            "location": "[resourceGroup().location]",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",                
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.44.0.0/16"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('devSubnet')]",
+                        
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "addressPrefix": "10.44.6.0/24"
+                        }
+                    },
+					{
+                        "name": "[parameters('settings').network.gatewaysubnet]",
+                        
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "addressPrefix": "10.44.7.0/24"
+                        }
+                    }
+                ],
+                "virtualNetworkPeerings": []
+            },
+            "dependsOn": []
+    },
     {
       "comments": "Network Interface for this dev node, should be a static IP",
       "type": "Microsoft.Network/networkInterfaces",
