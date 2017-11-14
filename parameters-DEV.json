@@ -55,7 +55,7 @@
           "devGatewayIp": "10.44.6.37",
 		  "devLoadBal": "10.44.6.50",
           "devGatewayVnet": "jpdc-services-vnet",
-		 
+		 "devLoadBal": "10.44.6.80",
           "devGatewaySubnet": "jpdc-appgateway-subnet",
           "devNodeSubnet": "jpdc-application-subnet",
 		  "devVMmNsg":  "jpdc-dev-vm-nsg",
