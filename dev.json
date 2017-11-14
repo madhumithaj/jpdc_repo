@@ -56,7 +56,7 @@
 
     "vmName": "[parameters('nodeName').name]",
     "vmSize": "[parameters('settings').vmSizes.devvmsize]",
-
+    "devNodePre": "[concat('jpdc-', toLower(parameters('settings').stage), parameters('settings').locationAbbrv)]",
     "NICName": "[concat(parameters('nodeName').name, '-nic1')]",
     "devVnetRg": "[parameters('settings').network.devVnetRg]",
     "devSubnet": "[parameters('settings').network.devSubnet]",
