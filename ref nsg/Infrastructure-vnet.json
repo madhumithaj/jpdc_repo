@@ -1,0 +1,59 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01-preview/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "subnets":{
+      "type": "object",
+      "metadata": {
+        "description": "This parameter is usally passed in from the parent template.  It supplies the following: web.name web.ip batch.name batch.ip cassandra.name cassandra.ip solr.name solr.ip"
+      }
+    },
+    "apiVersions": {
+      "type": "object",
+      "metadata": {
+        "description": "This parameter is usally passed in from the parent template.  It supplies all template API versions we are using: "
+      }
+    },
+    "networkConfig": {
+      "type": "object",
+      "metadata": {
+        "description": "This parameter is usally passed in from the parent template.  It supplies the following: web.name web.ip batch.name batch.ip cassandra.name cassandra.ip solr.name solr.ip"
+      }
+    }
+  },
+  "variables": { },
+  "resources": [
+  {
+    "comments": "Virtual network containing the complete AHM environment (Not including dev)",
+    "type": "Microsoft.Network/virtualNetworks",
+    "name": "[parameters('networkConfig').virtualNetworkName]",
+    "location": "[resourceGroup().location]",
+    "apiVersion": "[parameters('apiVersions').network]",
+    "properties": {
+      "addressSpace": {
+        "addressPrefixes": [
+          "[parameters('networkConfig').addressRange]"
+        ]
+      },
+      "subnets": [
+        {
+          "name": "[parameters('subnets').web.name]",
+          "properties": {
+            "addressPrefix": "[parameters('subnets').web.ip]"
+          }
+        },{
+          "name": "[parameters('subnets').batch.name]",
+          "properties": {
+            "addressPrefix": "[parameters('subnets').batch.ip]"
+          }
+        },{
+          "name": "[parameters('subnets').solr.name]",
+          "properties": {
+            "addressPrefix": "[parameters('subnets').solr.ip]"
+          }
+        }
+      ]
+    }
+  }
+  ]
+}

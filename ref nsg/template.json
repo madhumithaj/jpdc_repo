@@ -1,0 +1,134 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+
+    "keyVaultNm": {
+      "value": null,
+      "type": "string",
+      "metadata": {
+        "description": "Key vault name, contains keys for logging into the AD"
+      }
+    },
+
+    "keyVaultRg": {
+      "value": null,
+      "type": "string",
+      "metadata": {
+        "description": "Resource Group for the above Key vault"
+      }
+    },
+
+    "settings": {
+      "value": null,
+      "type": "object",
+      "metadata": {
+        "description": "Object Containing all of the common settings for AD, api versions, VM Sizing, etc. See the parameters-XXX.json."
+      }
+    },
+
+    "templateSASKey": {
+      "value": null,
+      "type": "secureString",
+      "metadata": {
+        "description": "Shared access signiture for the template storage account, used for template linking"
+      }
+    },
+    "templateUrl": {
+      "value": null,
+      "type": "string",
+      "metadata": {
+        "description": "Base URL where the AHM Templates are located"
+      }
+    }
+  },
+
+  "variables": {
+    "keyVault": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('keyVaultRg'), '/providers/Microsoft.KeyVault/vaults/', parameters('keyVaultNm'))]",
+    "appIdKeyVault": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('keyVaultRg'), '/providers/Microsoft.KeyVault/vaults/', parameters('settings').customData.appIdKeyVault)]",
+
+    "prepCommonUrl": "[concat(parameters('templateUrl'), parameters('settings').prepCommon, parameters('templateSASKey'))]",
+    "infraUrl": "[concat(parameters('templateUrl'), '/network/infra.json', parameters('templateSASKey'))]"
+  },
+  "resources": [
+    {
+      "name": "prepCommonInfra",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('settings').apiVersions.deploy]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('prepCommonUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+
+        "parameters": {
+          "settings": {
+            "value": "[parameters('settings')]"
+          },
+
+          "adAdminUsername": {
+            "reference": {
+              "keyVault": {
+                "id": "[variables('keyVault')]"
+              },
+              "secretName": "adAdminUsername"
+            }
+          },
+          "adAdminPassword": {
+            "reference": {
+              "keyVault": {
+                "id": "[variables('keyVault')]"
+              },
+              "secretName": "adAdminPassword"
+            }
+          },
+
+          "appId": {
+            "reference": {
+              "keyVault": {
+                "id": "[variables('appIdKeyVault')]"
+              },
+              "secretName": "[parameters('settings').customData.appId]"
+            }
+          },
+          "appIdObject": {
+            "reference": {
+              "keyVault": {
+                "id": "[variables('appIdKeyVault')]"
+              },
+              "secretName": "[parameters('settings').customData.appIdObject]"
+            }
+          },
+          "appIdSecret": {
+            "reference": {
+              "keyVault": {
+                "id": "[variables('appIdKeyVault')]"
+              },
+              "secretName": "[parameters('settings').customData.appIdSecret]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "AHMInfra",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('settings').apiVersions.deploy]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('infraUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+
+        "parameters": {
+          "settings": {
+            "value": "[parameters('settings')]"
+          }
+
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,547 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01-preview/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+      "settings": {
+      "value": null,
+      "type": "object",
+      "metadata": {
+        "description": "Object Containing all of the common settings for AD, api versions, VM Sizing, etc. See the parameters-XXX.json."
+      }
+    }
+  },
+  "variables": { },
+  "resources": [
+    {
+      "comments": "Virtual network containing the complete AHM environment (Not including dev)",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[parameters('settings').network.vnet1name]",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "[parameters('settings').apiVersions.network]",
+
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('settings').network.vnet1ip]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[parameters('settings').network.dasecurityname]",
+            "properties": {
+              "addressPrefix": "[parameters('settings').network.dasecurityip]"
+            }
+          }
+        ]
+      },
+      "resources": [
+         {
+             "apiVersion": "2016-06-01",
+             "type": "virtualNetworkPeerings",
+             "name": "vNet1tovNet2PeeringName",
+             "location": "[resourceGroup().location]",
+             "dependsOn": [
+                 "[concat('Microsoft.Network/virtualNetworks/', parameters('settings').network.vnet1name)]",
+                 "[concat('Microsoft.Network/virtualNetworks/', parameters('settings').network.vnet2name)]"
+             ],
+             "comments": "This is the peering from vNet 1 to vNet 2",
+             "properties": {
+                 "allowVirtualNetworkAccess": "true",
+                 "allowForwardedTraffic": "false",
+                 "allowGatewayTransit": "false",
+                 "useRemoteGateways": "false",
+                 "remoteVirtualNetwork": {
+                     "id": "[resourceId('Microsoft.Network/virtualNetworks',parameters('settings').network.vnet2name)]"
+                 }
+             }
+         }
+      ]
+    },
+  {
+    "comments": "Virtual network containing the complete AHM environment (Not including dev)",
+    "type": "Microsoft.Network/virtualNetworks",
+    "name": "[parameters('settings').network.vnet2name]",
+    "location": "[resourceGroup().location]",
+    "apiVersion": "[parameters('settings').apiVersions.network]",
+    "dependsOn": [
+       "[concat('Microsoft.Network/networkSecurityGroups/', 'batch-nsg')]",
+       "[concat('Microsoft.Network/networkSecurityGroups/', 'bastion-nsg')]",
+       "[concat('Microsoft.Network/networkSecurityGroups/', 'web-nsg')]",
+        "[concat('Microsoft.Network/networkSecurityGroups/','database-nsg')]"
+     ],
+    "properties": {
+      "addressSpace": {
+        "addressPrefixes": [
+          "[parameters('settings').network.vnet2ip]"
+        ]
+      },
+      "subnets": [
+        {
+          "name": "[parameters('settings').network.webname]",
+          "properties": {
+            "addressPrefix": "[parameters('settings').network.webip]",
+            "networkSecurityGroup": {
+              "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'web-nsg')]"
+            }
+          }
+        },
+        {
+          "name": "[parameters('settings').network.batchname]",
+          "properties": {
+            "addressPrefix": "[parameters('settings').network.batchip]",
+            "networkSecurityGroup": {
+              "id": "[resourceId('Microsoft.Network/networkSecurityGroups','batch-nsg')]"
+            }
+          }
+        },
+        {
+          "name": "[parameters('settings').network.databasename]",
+          "properties": {
+            "addressPrefix": "[parameters('settings').network.databaseip]",
+            "networkSecurityGroup": {
+              "id": "[resourceId('Microsoft.Network/networkSecurityGroups','database-nsg')]"
+            }
+          }
+        },
+        {
+          "name": "[parameters('settings').network.bastionname]",
+          "properties": {
+            "addressPrefix": "[parameters('settings').network.bastionip]",
+            "networkSecurityGroup": {
+              "id": "[resourceId('Microsoft.Network/networkSecurityGroups','bastion-nsg')]"
+            }
+          }
+        }
+      ]
+    },
+    "resources": [
+       {
+           "apiVersion": "2016-06-01",
+           "type": "virtualNetworkPeerings",
+           "name": "vNet2tovNet1PeeringName",
+           "location": "[resourceGroup().location]",
+           "dependsOn": [
+             "[concat('Microsoft.Network/virtualNetworks/', parameters('settings').network.vnet1name)]",
+             "[concat('Microsoft.Network/virtualNetworks/', parameters('settings').network.vnet2name)]"
+           ],
+           "comments": "This is the peering from vNet 1 to vNet 2",
+           "properties": {
+               "allowVirtualNetworkAccess": "true",
+               "allowForwardedTraffic": "false",
+               "allowGatewayTransit": "false",
+               "useRemoteGateways": "false",
+               "remoteVirtualNetwork": {
+                   "id": "[resourceId('Microsoft.Network/virtualNetworks',parameters('settings').network.vnet1name)]"
+               }
+           }
+       }
+    ]
+  },
+    {
+     "apiVersion": "2015-05-01-preview",
+     "type": "Microsoft.Network/networkSecurityGroups",
+     "name": "web-nsg",
+     "location": "[resourceGroup().location]",
+     "properties": {
+       "securityRules": [
+         {
+           "name": "web_rule1",
+           "properties": {
+             "description": "Allow SSH using Port 22",
+             "protocol": "*",
+             "sourcePortRange": "*",
+             "destinationPortRange": "22",
+             "sourceAddressPrefix": "*",
+             "destinationAddressPrefix": "*",
+             "access": "Allow",
+             "priority": 100,
+             "direction": "Inbound",
+             "sourceAddressPrefixes": [],
+             "destinationAddressPrefixes": []
+           }
+         },
+         {
+           "name": "web_rule2",
+           "properties": {
+             "description": "Allow HTTP using Port 31062",
+             "protocol": "*",
+             "sourcePortRange": "*",
+             "destinationPortRange": "31062",
+             "sourceAddressPrefix": "*",
+             "destinationAddressPrefix": "*",
+             "access": "Allow",
+             "priority": 101,
+             "direction": "Inbound"
+           }
+         }
+       ]
+     }
+   },
+   {
+     "apiVersion": "2015-05-01-preview",
+     "type": "Microsoft.Network/networkSecurityGroups",
+     "name": "batch-nsg",
+     "location": "[resourceGroup().location]",
+     "properties": {
+       "securityRules": [
+         {
+           "name": "batch_rule1",
+           "properties": {
+             "description": "Allow SSH using Port 22",
+             "protocol": "*",
+             "sourcePortRange": "*",
+             "destinationPortRange": "22",
+             "sourceAddressPrefix": "*",
+             "destinationAddressPrefix": "*",
+             "access": "Allow",
+             "priority": 100,
+             "direction": "Inbound"
+           }
+         },
+         {
+           "name": "batch_rule2",
+           "properties": {
+             "description": "Allow SMTP using Port 25",
+             "protocol": "*",
+             "sourcePortRange": "*",
+             "destinationPortRange": "25",
+             "sourceAddressPrefix": "*",
+             "destinationAddressPrefix": "*",
+             "access": "Allow",
+             "priority": 101,
+             "direction": "Inbound"
+           }
+         },
+           {
+             "name": "batch_rule3",
+             "properties": {
+               "description": "Allow ActiveMQ JMX using Port 1099",
+               "protocol": "*",
+               "sourcePortRange": "*",
+               "destinationPortRange": "1099",
+               "sourceAddressPrefix": "*",
+               "destinationAddressPrefix": "*",
+               "access": "Allow",
+               "priority": 102,
+               "direction": "Inbound"
+             }
+           },
+           {
+             "name": "batch_rule4",
+             "properties": {
+               "description": "Allow ZK peers using Port 2888",
+               "protocol": "*",
+               "sourcePortRange": "*",
+               "destinationPortRange": "2888",
+               "sourceAddressPrefix": "*",
+               "destinationAddressPrefix": "*",
+               "access": "Allow",
+               "priority": 103,
+               "direction": "Inbound"
+             }
+           },
+           {
+             "name": "batch_rule5",
+             "properties": {
+               "description": "Allow ZK client using Port 2181",
+               "protocol": "*",
+               "sourcePortRange": "*",
+               "destinationPortRange": "2181",
+               "sourceAddressPrefix": "*",
+               "destinationAddressPrefix": "*",
+               "access": "Allow",
+               "priority": 104,
+               "direction": "Inbound"
+             }
+           },
+           {
+             "name": "batch_rule6",
+             "properties": {
+               "description": "Allow SOLR AJP using Port 8009",
+               "protocol": "*",
+               "sourcePortRange": "*",
+               "destinationPortRange": "8009",
+               "sourceAddressPrefix": "*",
+               "destinationAddressPrefix": "*",
+               "access": "Allow",
+               "priority": 105,
+               "direction": "Inbound"
+             }
+           },
+           {
+             "name": "batch_rule7",
+             "properties": {
+               "description": "Allow SOLR using Port 8983",
+               "protocol": "*",
+               "sourcePortRange": "*",
+               "destinationPortRange": "8983",
+               "sourceAddressPrefix": "*",
+               "destinationAddressPrefix": "*",
+               "access": "Allow",
+               "priority": 106,
+               "direction": "Inbound"
+             }
+           },
+           {
+             "name": "batch_rule8",
+             "properties": {
+               "description": "Allow ActiveMQ Admin using Port 8061",
+               "protocol": "*",
+               "sourcePortRange": "*",
+               "destinationPortRange": "8061",
+               "sourceAddressPrefix": "*",
+               "destinationAddressPrefix": "*",
+               "access": "Allow",
+               "priority": 107,
+               "direction": "Inbound"
+             }
+           },
+           {
+             "name": "batch_rule9",
+             "properties": {
+               "description": "Allow Oak JMX Admin using Port 9090",
+               "protocol": "*",
+               "sourcePortRange": "*",
+               "destinationPortRange": "9090",
+               "sourceAddressPrefix": "*",
+               "destinationAddressPrefix": "*",
+               "access": "Allow",
+               "priority": 108,
+               "direction": "Inbound"
+             }
+           },
+           {
+             "name": "batch_rule10",
+             "properties": {
+               "description": "Allow Oak Tomcat using Port 21062",
+               "protocol": "*",
+               "sourcePortRange": "*",
+               "destinationPortRange": "21062",
+               "sourceAddressPrefix": "*",
+               "destinationAddressPrefix": "*",
+               "access": "Allow",
+               "priority": 109,
+               "direction": "Inbound"
+             }
+           },
+           {
+             "name": "batch_rule11",
+             "properties": {
+               "description": "Allow EFREST using Port 31090",
+               "protocol": "*",
+               "sourcePortRange": "*",
+               "destinationPortRange": "31090",
+               "sourceAddressPrefix": "*",
+               "destinationAddressPrefix": "*",
+               "access": "Allow",
+               "priority": 110,
+               "direction": "Inbound"
+             }
+           },
+           {
+             "name": "batch_rule12",
+             "properties": {
+               "description": "Allow ActiveMQ using Port 61616",
+               "protocol": "*",
+               "sourcePortRange": "*",
+               "destinationPortRange": "61616",
+               "sourceAddressPrefix": "*",
+               "destinationAddressPrefix": "*",
+               "access": "Allow",
+               "priority": 111,
+               "direction": "Inbound"
+             }
+           },
+           {
+             "name": "batch_rule13",
+             "properties": {
+               "description": "Allow Cass inter node comm using Port 7000",
+               "protocol": "*",
+               "sourcePortRange": "*",
+               "destinationPortRange": "7000",
+               "sourceAddressPrefix": "*",
+               "destinationAddressPrefix": "*",
+               "access": "Allow",
+               "priority": 112,
+               "direction": "Inbound"
+             }
+           },
+           {
+             "name": "batch_rule14",
+             "properties": {
+               "description": "Allow Cass JMX using Port 7199",
+               "protocol": "*",
+               "sourcePortRange": "*",
+               "destinationPortRange": "7199",
+               "sourceAddressPrefix": "*",
+               "destinationAddressPrefix": "*",
+               "access": "Allow",
+               "priority": 113,
+               "direction": "Inbound"
+             }
+           },
+           {
+             "name": "batch_rule15",
+             "properties": {
+               "description": "Allow CassCQL using Port 9042",
+               "protocol": "*",
+               "sourcePortRange": "*",
+               "destinationPortRange": "9042",
+               "sourceAddressPrefix": "*",
+               "destinationAddressPrefix": "*",
+               "access": "Allow",
+               "priority": 114,
+               "direction": "Inbound"
+             }
+           }
+         ]
+     }
+   },
+   {
+     "apiVersion": "2015-05-01-preview",
+     "type": "Microsoft.Network/networkSecurityGroups",
+     "name": "database-nsg",
+     "location": "[resourceGroup().location]",
+     "properties": {
+       "securityRules": [
+         {
+           "name": "database-rule1",
+           "properties": {
+             "description": "Allow SSH using Port 22",
+             "protocol": "*",
+             "sourcePortRange": "*",
+             "destinationPortRange": "22",
+             "sourceAddressPrefix": "*",
+             "destinationAddressPrefix": "*",
+             "access": "Allow",
+             "priority": 100,
+             "direction": "Inbound"
+           }
+         },
+         {
+           "name": "database-rule2",
+           "properties": {
+             "description": "Allow TNS using Port 1521",
+             "protocol": "*",
+             "sourcePortRange": "*",
+             "destinationPortRange": "1521",
+             "sourceAddressPrefix": "*",
+             "destinationAddressPrefix": "*",
+             "access": "Allow",
+             "priority": 101,
+             "direction": "Inbound"
+           }
+         },
+         {
+           "name": "database-rule3",
+           "properties": {
+             "description": "Allow TNS using Port 1522",
+             "protocol": "*",
+             "sourcePortRange": "*",
+             "destinationPortRange": "1522",
+             "sourceAddressPrefix": "*",
+             "destinationAddressPrefix": "*",
+             "access": "Allow",
+             "priority": 102,
+             "direction": "Inbound"
+           }
+         },
+         {
+           "name": "database-rule4",
+           "properties": {
+             "description": "Allow TNS using Port 1523",
+             "protocol": "*",
+             "sourcePortRange": "*",
+             "destinationPortRange": "1523",
+             "sourceAddressPrefix": "*",
+             "destinationAddressPrefix": "*",
+             "access": "Allow",
+             "priority": 103,
+             "direction": "Inbound"
+           }
+         },
+         {
+           "name": "database-rule5",
+           "properties": {
+             "description": "Allow TNS using Port 1524",
+             "protocol": "*",
+             "sourcePortRange": "*",
+             "destinationPortRange": "1524",
+             "sourceAddressPrefix": "*",
+             "destinationAddressPrefix": "*",
+             "access": "Allow",
+             "priority": 104,
+             "direction": "Inbound"
+           }
+         },
+         {
+           "name": "database-rule6",
+           "properties": {
+             "description": "Allow TNS using Port 1525",
+             "protocol": "*",
+             "sourcePortRange": "*",
+             "destinationPortRange": "1525",
+             "sourceAddressPrefix": "*",
+             "destinationAddressPrefix": "*",
+             "access": "Allow",
+             "priority": 105,
+             "direction": "Inbound"
+           }
+         },
+         {
+           "name": "database-rule7",
+           "properties": {
+             "description": "Allow Port 53620",
+             "protocol": "*",
+             "sourcePortRange": "*",
+             "destinationPortRange": "53620",
+             "sourceAddressPrefix": "*",
+             "destinationAddressPrefix": "*",
+             "access": "Allow",
+             "priority": 106,
+             "direction": "Inbound"
+           }
+         },
+         {
+           "name": "database-rule8",
+           "properties": {
+             "description": "Allow Port 53625",
+             "protocol": "*",
+             "sourcePortRange": "*",
+             "destinationPortRange": "53625",
+             "sourceAddressPrefix": "*",
+             "destinationAddressPrefix": "*",
+             "access": "Allow",
+             "priority": 107,
+             "direction": "Inbound"
+           }
+         }
+       ]
+     }
+   },
+   {
+     "apiVersion": "2015-05-01-preview",
+     "type": "Microsoft.Network/networkSecurityGroups",
+     "name": "bastion-nsg",
+     "location": "[resourceGroup().location]",
+     "properties": {
+       "securityRules": [
+         {
+           "name": "bastion_rule1",
+           "properties": {
+             "description": "Allow SSH",
+             "protocol": "*",
+             "sourcePortRange": "*",
+             "destinationPortRange": "22",
+             "sourceAddressPrefix": "*",
+             "destinationAddressPrefix": "*",
+             "access": "Allow",
+             "priority": 100,
+             "direction": "Inbound"
+           }
+         }
+       ]
+     }
+   }
+           ]
+       }
